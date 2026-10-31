@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KrushiSarathi — कृषी सारथी</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌾</text></svg>">
+</head>
+<body>
+
+    <!-- ═══ Animated Background Particles ═══ -->
+    <div class="bg-particles" id="bgParticles"></div>
+
+    <!-- ═══ Header ═══ -->
+    <header class="header">
+        <div class="header-content">
+            <div class="logo-pulse"></div>
+            <h1 class="header-title">
+                <span class="logo-emoji">🌾</span>
+                KrushiSarathi
+                <span class="header-hindi">कृषी सारथी</span>
+            </h1>
+            <p class="header-subtitle">
+                <span class="typing-text" id="typingText"></span>
+                <span class="cursor">|</span>
+            </p>
+        </div>
+        <div class="header-wave">
+            <svg viewBox="0 0 1440 100" preserveAspectRatio="none">
+                <path d="M0,40 C360,100 720,0 1080,60 C1260,90 1380,30 1440,50 L1440,100 L0,100 Z" fill="#f0faf3"/>
+            </svg>
+        </div>
+    </header>
+
+    <!-- ═══ Stats Bar ═══ -->
+    <div class="stats-bar">
+        <div class="stat-item" data-aos="fade-up">
+            <span class="stat-number" data-count="15">0</span>
+            <span class="stat-label">Disease Classes</span>
+        </div>
+        <div class="stat-item" data-aos="fade-up">
+            <span class="stat-number" data-count="85">0</span>
+            <span class="stat-label">% Accuracy</span>
+        </div>
+        <div class="stat-item" data-aos="fade-up">
+            <span class="stat-number" data-count="10">0</span>
+            <span class="stat-label">Govt Schemes</span>
+        </div>
+        <div class="stat-item" data-aos="fade-up">
+            <span class="stat-number" data-count="15">0</span>
+            <span class="stat-label">Crops Supported</span>
+        </div>
+    </div>
+
+    <!-- ═══ Tab Navigation ═══ -->
+    <div class="tab-container">
+        <nav class="tab-nav">
+            <button class="tab-btn active" data-tab="tab-disease">
+                <span class="tab-icon">🔬</span>
+                <span class="tab-label">Disease Detection</span>
+                <span class="tab-desc">Upload or capture leaf photo</span>
+            </button>
+            <button class="tab-btn" data-tab="tab-schemes">
+                <span class="tab-icon">🏛️</span>
+                <span class="tab-label">Government Schemes</span>
+                <span class="tab-desc">Explore policies & apply</span>
+            </button>
+            <button class="tab-btn" data-tab="tab-yield">
+                <span class="tab-icon">📊</span>
+                <span class="tab-label">Yield Prediction</span>
+                <span class="tab-desc">Predict crop output</span>
+            </button>
+            <div class="tab-indicator" id="tabIndicator"></div>
+        </nav>
+
+        <!-- ═══════════════════════════════════════════════════════════
+             TAB 1 — Disease Detection
+             ═══════════════════════════════════════════════════════════ -->
+        <div id="tab-disease" class="tab-content active">
+            <div class="section-header">
+                <h2 class="section-title animate-in">
+                    <span class="title-icon">🔬</span>
+                    Early Detection & Management of Crop Diseases
+                </h2>
+                <p class="section-subtitle animate-in">
+                    Upload or <strong>take a live photo</strong> of a Pepper, Potato, or Tomato leaf.
+                    Our AI will diagnose the disease and recommend treatments.
+                </p>
+            </div>
+
+            <div class="two-col">
+                <!-- Left: Input -->
+                <div class="input-col animate-in">
+                    <!-- Toggle: Upload vs Camera -->
+                    <div class="input-toggle">
+                        <button class="toggle-btn active" id="toggleUpload" onclick="switchInputMode('upload')">
+                            <span>📤</span> Upload Image
+                        </button>
+                        <button class="toggle-btn" id="toggleCamera" onclick="switchInputMode('camera')">
+                            <span>📷</span> Take Photo
+                        </button>
+                    </div>
+
+                    <!-- Upload Mode -->
+                    <div id="uploadMode" class="input-mode active">
+                        <div class="upload-area" id="uploadArea">
+                            <div class="upload-icon-wrapper">
+                                <span class="upload-icon">📤</span>
+                                <div class="upload-ring"></div>
+                            </div>
+                            <p class="upload-title">Drag & drop a leaf image here</p>
+                            <p class="upload-or">or</p>
+                            <span class="browse-btn">Browse Files</span>
+                            <p class="upload-hint">Supports JPG, JPEG, PNG</p>
+                        </div>
+                        <input type="file" id="imageInput" accept="image/jpeg,image/png,image/jpg">
+                    </div>
+
+                    <!-- Camera Mode -->
+                    <div id="cameraMode" class="input-mode">
+                        <div class="camera-container" id="cameraContainer">
+                            <video id="cameraFeed" autoplay playsinline></video>
+                            <canvas id="cameraCanvas"></canvas>
+                            <div class="camera-overlay" id="cameraOverlay">
+                                <div class="camera-scan-line"></div>
+                                <div class="camera-corners">
+                                    <span class="corner tl"></span>
+                                    <span class="corner tr"></span>
+                                    <span class="corner bl"></span>
+                                    <span class="corner br"></span>
+                                </div>
+                            </div>
+                            <div class="camera-placeholder" id="cameraPlaceholder">
+                                <span>📷</span>
+                                <p>Click <strong>Start Camera</strong> to begin</p>
+                            </div>
+                        </div>
+                        <div class="camera-controls">
+                            <button class="btn btn-camera" id="startCameraBtn" onclick="startCamera()">
+                                📷 Start Camera
+                            </button>
+                            <button class="btn btn-capture" id="captureBtn" onclick="capturePhoto()" style="display:none;">
+                                <span class="capture-dot"></span> Capture
+                            </button>
+                            <button class="btn btn-retake" id="retakeBtn" onclick="retakePhoto()" style="display:none;">
+                                🔄 Retake
+                            </button>
+                            <button class="btn btn-stop" id="stopCameraBtn" onclick="stopCamera()" style="display:none;">
+                                ⏹ Stop
+                            </button>
+                        </div>
+                        <select id="cameraSelect" class="camera-select" style="display:none;"></select>
+                    </div>
+
+                    <!-- Preview (shared) -->
+                    <div class="preview-container" id="previewContainer" style="display:none;">
+                        <div class="preview-wrapper">
+                            <img id="previewImage" alt="Preview">
+                            <div class="preview-badge">Ready to Analyze</div>
+                        </div>
+                        <p class="preview-name" id="fileName"></p>
+                    </div>
+
+                    <button class="btn btn-primary btn-analyze" id="analyzeBtn" disabled>
+                        <span class="btn-text">🔍 Analyze Disease</span>
+                        <span class="btn-loader"></span>
+                    </button>
+                </div>
+
+                <!-- Right: Results -->
+                <div class="result-col">
+                    <div class="error-alert" id="diseaseError"></div>
+
+                    <div class="result-panel" id="resultPanel">
+                        <div class="result-header" id="resultHeader">
+                            <div class="result-emoji" id="resultEmoji"></div>
+                            <div>
+                                <h3 id="resultTitle"></h3>
+                                <div class="confidence-row" id="resultConfidence"></div>
+                            </div>
+                        </div>
+
+                        <div class="result-sections">
+                            <div class="info-section animate-in">
+                                <h4><span class="section-icon">🔎</span> Cause</h4>
+                                <p id="resultCause"></p>
+                            </div>
+
+                            <div class="info-section animate-in">
+                                <h4><span class="section-icon">🩺</span> Symptoms</h4>
+                                <ul id="resultSymptoms"></ul>
+                            </div>
+
+                            <div class="info-section animate-in">
+                                <h4><span class="section-icon">💊</span> Management / Treatment</h4>
+                                <ul id="resultManagement"></ul>
+                            </div>
+                        </div>
+
+                        <div class="chart-section">
+                            <h4><span class="section-icon">📊</span> Prediction Confidence (Top 5)</h4>
+                            <div class="bar-chart" id="top5Chart"></div>
+                        </div>
+                    </div>
+
+                    <!-- Placeholder -->
+                    <div id="resultPlaceholder" class="placeholder-card">
+                        <div class="placeholder-illustration">
+                            <span class="leaf leaf-1">🍃</span>
+                            <span class="leaf leaf-2">🌿</span>
+                            <span class="leaf leaf-3">🍂</span>
+                        </div>
+                        <p>Upload or capture a leaf image and click <strong>Analyze</strong></p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Dataset Info -->
+            <div class="dataset-info animate-in">
+                <details>
+                    <summary>
+                        <span>📂</span> About the PlantVillage Dataset
+                    </summary>
+                    <div class="dataset-body">
+                        <p>Trained on the <strong>PlantVillage</strong> dataset:</p>
+                        <div class="crop-tags">
+                            <span class="crop-tag pepper">🫑 Pepper — Bacterial Spot, Healthy</span>
+                            <span class="crop-tag potato">🥔 Potato — Early Blight, Late Blight, Healthy</span>
+                            <span class="crop-tag tomato">🍅 Tomato — 10 classes (diseases + healthy)</span>
+                        </div>
+                        <p><strong>7,025 images</strong> across <strong>15 classes</strong> — HOG + Color features with Extra Trees classifier.</p>
+                    </div>
+                </details>
+            </div>
+        </div>
+
+        <!-- ═══════════════════════════════════════════════════════════
+             TAB 2 — Government Schemes
+             ═══════════════════════════════════════════════════════════ -->
+        <div id="tab-schemes" class="tab-content">
+            <div class="section-header">
+                <h2 class="section-title animate-in">
+                    <span class="title-icon">🏛️</span>
+                    Government Schemes & Policies for Farmers
+                </h2>
+                <p class="section-subtitle animate-in">
+                    Explore government schemes designed to support Indian farmers.
+                    Filter by category, search, and learn how to apply.
+                </p>
+            </div>
+
+            <div class="filter-bar animate-in">
+                <div class="filter-group">
+                    <label for="categoryFilter">Category</label>
+                    <select id="categoryFilter">
+                        <option value="">All Categories</option>
+                    </select>
+                </div>
+                <div class="filter-group search-group">
+                    <label for="searchInput">Search</label>
+                    <div class="search-wrapper">
+                        <span class="search-icon">🔍</span>
+                        <input type="text" id="searchInput" placeholder="Search schemes...">
+                    </div>
+                </div>
+            </div>
+
+            <p class="scheme-count" id="schemeCount"></p>
+            <div id="schemesList"></div>
+        </div>
+
+        <!-- ═══════════════════════════════════════════════════════════
+             TAB 3 — Yield Prediction
+             ═══════════════════════════════════════════════════════════ -->
+        <div id="tab-yield" class="tab-content">
+            <div class="section-header">
+                <h2 class="section-title animate-in">
+                    <span class="title-icon">📊</span>
+                    Crop Yield Prediction
+                </h2>
+                <p class="section-subtitle animate-in">
+                    Predict expected crop yield based on soil type,
+                    weather conditions, and soil nutrient levels.
+                </p>
+            </div>
+
+            <div class="two-col">
+                <!-- Left: Inputs -->
+                <div class="input-col animate-in">
+                    <div class="form-card">
+                        <h3 class="form-section-title"><span>🌾</span> Crop & Soil</h3>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="cropSelect">Crop</label>
+                                <select id="cropSelect"></select>
+                            </div>
+                            <div class="form-group">
+                                <label for="soilSelect">Soil Type</label>
+                                <select id="soilSelect"></select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-card">
+                        <h3 class="form-section-title"><span>🌤️</span> Weather Conditions</h3>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Temperature: <span class="range-val" id="tempValue">25°C</span></label>
+                                <input type="range" id="tempRange" min="5" max="45" value="25" step="0.5" class="range-slider">
+                                <div class="range-labels"><span>5°C</span><span>45°C</span></div>
+                            </div>
+                            <div class="form-group">
+                                <label>Rainfall: <span class="range-val" id="rainValue">800 mm</span></label>
+                                <input type="range" id="rainRange" min="100" max="3000" value="800" step="50" class="range-slider">
+                                <div class="range-labels"><span>100</span><span>3000 mm</span></div>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Humidity: <span class="range-val" id="humidityValue">65%</span></label>
+                                <input type="range" id="humidityRange" min="20" max="100" value="65" step="1" class="range-slider">
+                                <div class="range-labels"><span>20%</span><span>100%</span></div>
+                            </div>
+                            <div class="form-group">
+                                <label>Soil pH: <span class="range-val" id="phValue">6.5</span></label>
+                                <input type="range" id="phRange" min="3.5" max="9.5" value="6.5" step="0.1" class="range-slider">
+                                <div class="range-labels"><span>3.5</span><span>9.5</span></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-card">
+                        <h3 class="form-section-title"><span>🧪</span> Soil Nutrients (kg/ha)</h3>
+                        <div class="form-row-3">
+                            <div class="form-group">
+                                <label for="nitrogenInput">Nitrogen (N)</label>
+                                <input type="number" id="nitrogenInput" value="60" min="10" max="140" step="5">
+                            </div>
+                            <div class="form-group">
+                                <label for="phosphorusInput">Phosphorus (P)</label>
+                                <input type="number" id="phosphorusInput" value="35" min="5" max="80" step="5">
+                            </div>
+                            <div class="form-group">
+                                <label for="potassiumInput">Potassium (K)</label>
+                                <input type="number" id="potassiumInput" value="35" min="5" max="80" step="5">
+                            </div>
+                        </div>
+                    </div>
+
+                    <button class="btn btn-primary btn-predict" id="predictBtn">
+                        <span class="btn-text">🔮 Predict Yield</span>
+                        <span class="btn-loader"></span>
+                    </button>
+                </div>
+
+                <!-- Right: Results -->
+                <div class="result-col">
+                    <div class="error-alert" id="yieldError"></div>
+
+                    <div class="yield-result" id="yieldResult">
+                        <div class="yield-hero">
+                            <div class="yield-ring">
+                                <svg viewBox="0 0 120 120">
+                                    <circle cx="60" cy="60" r="52" class="ring-bg"/>
+                                    <circle cx="60" cy="60" r="52" class="ring-fill" id="yieldRing"/>
+                                </svg>
+                                <div class="yield-center">
+                                    <span class="yield-value" id="yieldValue">0.00</span>
+                                    <span class="yield-unit">t/ha</span>
+                                </div>
+                            </div>
+                            <div class="yield-crop-name" id="yieldCrop"></div>
+                        </div>
+
+                        <h4 class="result-sub-title"><span>📋</span> Input Summary</h4>
+                        <table class="summary-table" id="summaryTable">
+                            <thead><tr><th>Parameter</th><th>Value</th></tr></thead>
+                            <tbody></tbody>
+                        </table>
+
+                        <h4 class="result-sub-title"><span>🔑</span> Feature Importance</h4>
+                        <div class="bar-chart" id="importanceChart"></div>
+
+                        <div id="recommendations"></div>
+                    </div>
+
+                    <!-- Placeholder -->
+                    <div id="yieldPlaceholder" class="placeholder-card">
+                        <div class="placeholder-illustration">
+                            <span class="leaf leaf-1">🌱</span>
+                            <span class="leaf leaf-2">🌾</span>
+                            <span class="leaf leaf-3">🌻</span>
+                        </div>
+                        <p>Set parameters and click <strong>Predict Yield</strong> to see results</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Soil Comparison -->
+            <div class="compare-section animate-in">
+                <h3><span>📊</span> Compare Yield Across Soil Types</h3>
+                <div class="compare-row">
+                    <select id="compareCrop"></select>
+                    <button class="btn btn-compare" id="compareBtn">Compare</button>
+                </div>
+                <div class="bar-chart" id="compareChart"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ═══ Footer ═══ -->
+    <footer class="footer">
+        <div class="footer-content">
+            <p>Built with ❤️ — <strong>KrushiSarathi</strong> | Flask + HTML/CSS/JS + Scikit-Learn</p>
+        </div>
+    </footer>
+
+    <!-- ═══ Toast Notification ═══ -->
+    <div class="toast" id="toast">
+        <span class="toast-icon" id="toastIcon"></span>
+        <span class="toast-msg" id="toastMsg"></span>
+    </div>
+
+    <script src="/static/js/app.js"></script>
+</body>
+</html>
