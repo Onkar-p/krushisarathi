@@ -399,6 +399,7 @@ function displayDiseaseResult(data) {
 
     resultPanel.classList.add('visible');
     resultPlaceholder.style.display = 'none';
+    if (innerWidth < 820) resultPanel.scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
 
 function fillList(elementId, items) {
@@ -629,6 +630,7 @@ function displayYieldResult(data, payload) {
 
     document.getElementById('yieldResult').classList.add('visible');
     document.getElementById('yieldPlaceholder').style.display = 'none';
+    if (innerWidth < 820) document.getElementById('yieldResult').scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
 
 // Compare soils

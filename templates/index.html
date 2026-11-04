@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>KrushiSarathi — कृषी सारथी</title>
     <link rel="stylesheet" href="/static/css/style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Mukta:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌾</text></svg>">
 </head>
 <body>
@@ -27,11 +27,8 @@
                 <span class="cursor">|</span>
             </p>
         </div>
-        <div class="header-wave">
-            <svg viewBox="0 0 1440 100" preserveAspectRatio="none">
-                <path d="M0,40 C360,100 720,0 1080,60 C1260,90 1380,30 1440,50 L1440,100 L0,100 Z" fill="#f0faf3"/>
-            </svg>
-        </div>
+        <div class="sun"></div>
+        <div class="field"></div>
     </header>
 
     <!-- ═══ Stats Bar ═══ -->
@@ -59,17 +56,17 @@
         <nav class="tab-nav">
             <button class="tab-btn active" data-tab="tab-disease">
                 <span class="tab-icon">🔬</span>
-                <span class="tab-label">Disease Detection</span>
+                <span class="tab-label">Disease Detection<span class="mr">पीक रोग तपासणी</span></span>
                 <span class="tab-desc">Upload or capture leaf photo</span>
             </button>
             <button class="tab-btn" data-tab="tab-schemes">
                 <span class="tab-icon">🏛️</span>
-                <span class="tab-label">Government Schemes</span>
+                <span class="tab-label">Government Schemes<span class="mr">सरकारी योजना</span></span>
                 <span class="tab-desc">Explore policies & apply</span>
             </button>
             <button class="tab-btn" data-tab="tab-yield">
                 <span class="tab-icon">📊</span>
-                <span class="tab-label">Yield Prediction</span>
+                <span class="tab-label">Yield Prediction<span class="mr">उत्पादन अंदाज</span></span>
                 <span class="tab-desc">Predict crop output</span>
             </button>
             <div class="tab-indicator" id="tabIndicator"></div>

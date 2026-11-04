@@ -1,2 +1,8 @@
 krushi/
 models/disease_model.joblib
+models/label_encoder.joblib
+models/yield_crop_encoder.joblib
+models/yield_meta.joblib
+models/yield_model.joblib
+models/yield_soil_encoder.joblib
+
